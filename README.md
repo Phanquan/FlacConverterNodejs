@@ -1,2 +1,2 @@
-# FlacConverterNodejs
-Convert Flac to Mp3 files 
+# FlacConverterNodeJS
+Convert Flac file to mp3
