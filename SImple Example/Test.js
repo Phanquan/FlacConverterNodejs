@@ -64,3 +64,20 @@ console.log(y)
 // let jsonData = dirTree(testSourceFolder)
 //     // console.log(jsonData)
 
+    // getOutputFolderAndFiles(sourceFolder, targetFolder) {
+    //     return this.folderData.arrOfInputFolder.map((folder) => {
+    //         return this.folderData.arrOfOutputFolder.push(targetFolder + '/' + folder.substring(folder.indexOf(path.basename(sourceFolder))))
+    //     })
+    // }
+
+    // getOutputFiles(sourceFolder, targetFolder) {
+    //     return this.fileData.arrOfInputFiles.map((file) => {
+    //         return this.fileData.arrOfOutputFiles.push(targetFolder + '/' + file.substring(file.indexOf(path.basename(sourceFolder))))
+    //     })
+    // }
+
+    // getOutputFlacs(sourceFolder, targetFolder){
+    //     return this.fileData.arrOfInputFlacs.map((file) => {
+    //         return this.fileData.arrOfOutputFlacs.push(targetFolder + '/' + file.substring(file.indexOf(path.basename(sourceFolder))))
+    //     })
+    // }

@@ -3,7 +3,7 @@ const path = require('path')
 const readChunk = require('read-chunk')
 const fileType = require('file-type')
 
-let testSourceFolder = 'C:/Users/admin/Desktop/Dropbox/FlacConverterNodeJS/FlacTestFolder'
+let testSourceFolder = 'E:/Lossless Music/Vocaloid Lossloess/40mP - 幸福指数'
 let testTargetFolder = 'C:/Users/admin/Desktop/Test Converter'
 let folderData = {
     fileName: [],
@@ -33,8 +33,9 @@ const recursiveSearch = (srcPath) => {
 let arrOfFiles = recursiveSearch(testSourceFolder)
     // console.log(arrOfFiles)
 
-let xyz = folderData.directoryName.map((x)=>{
-    return x = x.substring(0,x.indexOf(path.basename(testSourceFolder)))
+console.log(folderData)
+let xyz = folderData.directoryName.map((x) => {
+    return testTargetFolder + '/' + x.substring(x.indexOf(path.basename(testSourceFolder)))
 })
 console.log(xyz)
 
