@@ -1,0 +1,24 @@
+{
+  "name": "flac_to_mp3",
+  "version": "1.0.0",
+  "description": "Convert Flac flies to mp3 files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Phanquan/FlacConverterNodeJS.git"
+  },
+  "author": "PhanQuan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Phanquan/FlacConverterNodeJS/issues"
+  },
+  "homepage": "https://github.com/Phanquan/FlacConverterNodeJS#readme",
+  "dependencies": {
+    "caporal": "^0.6.0",
+    "file-type": "^4.3.0",
+    "read-chunk": "^2.0.0"
+  }
+}
