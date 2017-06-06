@@ -12,4 +12,4 @@ Convert Flac files to mp3
 - Kết quả có được sau khi convert:
 
 ![Input](./images/intro_input.png)
-![Ouput](./images/intro_output.png)
+![Ouput](./images/intro_ouput.png)
