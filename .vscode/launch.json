@@ -9,7 +9,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}\\SImple Example\\E-Z-Example-4.js"
+            "program": "${workspaceRoot}\\index.js"
         }
     ]
 }
