@@ -1,0 +1,19 @@
+﻿REM COMMENT "CUETools generated dummy CUE sheet"
+FILE "01.メランコリック.flac" WAVE
+  TRACK 01 AUDIO
+    INDEX 01 00:00:00
+FILE "02.心拍数#0822.flac" WAVE
+  TRACK 02 AUDIO
+    INDEX 01 00:00:00
+FILE "03.PONPONPON.flac" WAVE
+  TRACK 03 AUDIO
+    INDEX 01 00:00:00
+FILE "04.嗚呼、素晴らしきニャン生 ※フリー.flac" WAVE
+  TRACK 04 AUDIO
+    INDEX 01 00:00:00
+FILE "05.ハッピーシンセサイザ.flac" WAVE
+  TRACK 05 AUDIO
+    INDEX 01 00:00:00
+FILE "06.Mr.Music.flac" WAVE
+  TRACK 06 AUDIO
+    INDEX 01 00:00:00
