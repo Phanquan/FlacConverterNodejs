@@ -66,7 +66,7 @@ class Converter {
     }
 
     createOutputFiles(arrayOfInputFiles, arrayOfOutputFiles) {
-        if (arrayOfInputFiles.length === arrayOfOutputFiles) {
+        if (arrayOfInputFiles.length === arrayOfOutputFiles.length) {
             for (let i = 0; i < arrayOfInputFiles.length; i++) {
                 let cpChild = exec(`cp -rf "${arrayOfInputFiles[i]}" "${arrayOfOutputFiles[i]}"`)
             }
@@ -77,7 +77,7 @@ class Converter {
     }
 
     convert(bitRate, arrayOfInputFlacs, arrayOfOutputFlacs) { //eg: 128k
-        if (arrayOfInputFlacs.length === arrayOfOutputFlacs) {
+        if (arrayOfInputFlacs.length === arrayOfOutputFlacs.length) {
             for (var i = 0; i < arrayOfInputFlacs.length; i++) {
                 path.basename(arrayOfOutputFlacs[i]).replace('.flac', '.mp3')
                 let ffmpeg = exec(`ffmpeg -y -i "${arrayOfInputFlacs[i]}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${arrayOfOutputFlacs[i].replace('.flac', '.mp3')}"`)
@@ -102,8 +102,8 @@ class Converter {
 
 
 
-let testSourceFolder = 'E:/Lossless Music/Vocaloid Lossloess/40mP - 幸福指数';
-let testTargetFolder = 'C:/Users/admin/Desktop/test';
+let testSourceFolder = '/home/phanquan/Desktop/FlacConverterNodejs/Flac Test Files';
+let testTargetFolder = '/home/phanquan/Desktop';
 
 let info = new FolderInformation()
 info.getInputFolderAndFiles(testSourceFolder)
