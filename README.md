@@ -197,7 +197,9 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
 
 - Sử dụng File System và Path để phân tích cấu trúc input folder và đẩy ra các mảng chứa thông tin của thư mục (directories), các file và các file flac.
 - Đối với output folder, ta sẽ thấy có cùng cấu trúc với input folder (đương nhiên) tức là với đường dẫn từ tên thư mục trở đi sẽ giống nhau, chỉ khác ở chỗ đó trở về:
-  ```javascript
+
+	```javascript
 	let testSourceFolder = '/home/phanquan/Desktop/FlacConverterNodejs/Flac Test Files';
 	let testTargetFolder = '/home/phanquan/Document'
 	```
+
