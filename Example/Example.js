@@ -22,13 +22,11 @@ class FolderInformation {
 
     getInputFolderAndFiles(srcPath) {
         let fileList = fs.readdirSync(srcPath),
-            desPath = '',
-            targetPath = ''
+            desPath = ''
         fileList.forEach((file) => {
-            targetPath = (srcPath) + '/' + file
             desPath = srcPath + '/' + file
             if (fs.statSync(desPath).isDirectory()) {
-                this.folderData.arrOfInputFolder.push(targetPath)
+                this.folderData.arrOfInputFolder.push(desPath)
                 this.getInputFolderAndFiles(desPath)
             } else {
                 let buffer = readChunk.sync(desPath, 0, 4100)
@@ -111,9 +109,9 @@ info.getOutputFolderAndFiles(testSourceFolder, testTargetFolder)
 console.log(info)
 
 
-let converter = new Converter()
-converter.createOutputFolder(info.folderData.arrOfOutputFolder, testSourceFolder, testTargetFolder)
-converter.createOutputFiles(info.fileData.arrOfInputFiles,info.fileData.arrOfOutputFiles)
-converter.convert('128k',info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
+// let converter = new Converter()
+// converter.createOutputFolder(info.folderData.arrOfOutputFolder, testSourceFolder, testTargetFolder)
+// converter.createOutputFiles(info.fileData.arrOfInputFiles,info.fileData.arrOfOutputFiles)
+// converter.convert('128k',info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
 
 

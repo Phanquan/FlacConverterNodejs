@@ -262,6 +262,7 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
 
 ```javascript
 class FolderInformation{
+	//Phương thức khởi tạo
     constructor() {
 		// Khai báo folderData là đối tượng có 2 thuộc tính.
         this.folderData = {
@@ -279,3 +280,43 @@ class FolderInformation{
     }
 }
 ```
+
+- Sau khi khởi tạo các thuộc tính xong, ta sẽ bắt đầu tạo các phương thức để lấy data, method lấy data của các folder,files và flacs:
+
+```javascript
+class FolderInformation{
+	//Phương thức khởi tạo
+	constructor(){
+		//....
+	}
+	//Phương thức logic
+	getInputFolderAndFiles(srcPath) {
+		// tạo mảng chứa các file và folder con của inputFolder,dùng fs.readdir
+		let fileList = fs.readdirSync(srcPath),
+		desPath = ''
+		fileList.forEach((file) => {
+		desPath = srcPath + '/' + file //tạo desPath là đường dẫn của file và folder con
+			//nếu desPath là folder 
+			if (fs.statSync(desPath).isDirectory()) {
+				//thì đẩy vào mảng folder input
+				this.folderData.arrOfInputFolder.push(desPath)
+				//và thực hiện đệ quy để lấy tất cả folder
+				this.getInputFolderAndFiles(desPath)
+			} else { //nếu không phải folder (tức là file)
+				//tạo biến đọc Magic Number
+				let buffer = readChunk.sync(desPath, 0, 4100)
+				//Nếu biến hỗ trợ dạng Magic Number và là Flac
+				if (fileType(buffer) && fileType(buffer).ext === 'flac') {
+					//thì đẩy vào mảng file input
+					this.fileData.arrOfInputFlacs.push(desPath)
+				} else {
+					//các file còn lại đẩy vào mảng file input
+					this.fileData.arrOfInputFiles.push(desPath)
+				}
+			}
+		})
+    }
+}
+```
+
+
