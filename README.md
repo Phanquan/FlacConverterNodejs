@@ -252,3 +252,30 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
 4. Thực hiện `mkdir` folder thông qua mảng outputFolder , `cp -rf` từ inputFile sang outputFile.
 5. Thực hiện `ffmpeg` để convert các file flac sang mp3. Đầu ra chính là địa chỉ + tên của mp3.
 6. Code caporal để hoàn thiện chương trình.
+
+## PHẦN II: CLASS
+----------------------------------------------
+
+### Bước 1: Xây dựng Class FolderInformation
+
+- Class FolderInformation sẽ là class có thuộc tính là các mảng chứa thông tin inputFolder và các phương thức để lấy thông tin. Khởi tạo class: 
+
+```javascript
+class FolderInformation{
+    constructor() {
+		// Khai báo folderData là đối tượng có 2 thuộc tính.
+        this.folderData = {
+            arrOfInputFolder: [],	//Mảng chứa path của các folder input
+            arrOfOutputFolder: []	//Mảng chứa path của các folder output
+        }
+
+		//khai báo fileData là đối tượng có 4 thuộc tính.
+        this.fileData = {
+            arrOfInputFiles: [],	//Mảng chứa path của các file input
+            arrOfInputFlacs: [],	//Mảng chứa path của các flac input
+            arrOfOutputFiles: [],	//Mảng chứa path của các file output
+            arrOfOutputFlacs: []	//Mảng chứa path của các flac output
+        }
+    }
+}
+```
