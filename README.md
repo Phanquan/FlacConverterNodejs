@@ -308,10 +308,10 @@ class FolderInformation{
 				//Nếu biến hỗ trợ dạng Magic Number và là Flac
 				if (fileType(buffer) && fileType(buffer).ext === 'flac') {
 					//thì đẩy vào mảng file input
-					this.fileData.arrOfInputFlacs.push(desPath)
+					this.fileData.arrOfInputFlacs.push(desPath);
 				} else {
 					//các file còn lại đẩy vào mảng file input
-					this.fileData.arrOfInputFiles.push(desPath)
+					this.fileData.arrOfInputFiles.push(desPath);
 				}
 			}
 		})
