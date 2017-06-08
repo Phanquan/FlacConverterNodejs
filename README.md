@@ -195,11 +195,60 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
 
 - Chương trình cho phép nhập đầu vào một thư mục chứa file flac và các file khác, đầu ra sẽ là một thư mục mới giống hệt thư mục cũ nhưng chỉ thay file flac bằng file mp3 và giữ nguyên cấu trúc thư mục và file khác. Ta sẽ có những điều sau :
 
-- Sử dụng File System và Path để phân tích cấu trúc input folder và đẩy ra các mảng chứa thông tin của thư mục (directories), các file và các file flac.
+- Sử dụng File System và Path để phân tích cấu trúc input folder và đẩy ra 3 mảng chứa thông tin input của thư mục (directories), các file và các file flac.
+
+	```javascript
+	// Ví dụ về mảng folder:
+      [ '/home/phanquan/Desktop/Flac Test Files/Asymmetry',
+        '/home/phanquan/Desktop/Flac Test Files/Asymmetry/scans',
+        '/home/phanquan/Desktop/Flac Test Files/Asymmetry/scans/scans' ]
+
+	// Ví dụ về mảng chứa files:
+      [ '/home/phanquan/Desktop/Flac Test Files/Asymmetry/Asymmetry (1).png',
+        '/home/phanquan/Desktop/Flac Test Files/Asymmetry/Asymmetry.cuetools.flac.cue',
+        '/home/phanquan/Desktop/Flac Test Files/Asymmetry/scans/scans/01_01.jpg',
+        '/home/phanquan/Desktop/Flac Test Files/Asymmetry/scans/scans/01_08.jpg' ]
+	
+	// Ví dụ về mảng chứa flacs:
+      [ '/home/phanquan/Desktop/Flac Test Files/Asymmetry/01.メランコリック.flac',
+        '/home/phanquan/Desktop/Flac Test Files/Asymmetry/02.心拍数#0822.flac',
+        '/home/phanquan/Desktop/Flac Test Files/Asymmetry/06.Mr.Music.flac' ]
+	```
+
 - Đối với output folder, ta sẽ thấy có cùng cấu trúc với input folder (đương nhiên) tức là với đường dẫn từ tên thư mục trở đi sẽ giống nhau, chỉ khác ở chỗ đó trở về:
 
 	```javascript
-	let testSourceFolder = '/home/phanquan/Desktop/FlacConverterNodejs/Flac Test Files';
+	let testSourceFolder = '/home/phanquan/Desktop/Test Album';
 	let testTargetFolder = '/home/phanquan/Document'
-	```
 
+	// Cấu trúc thư mục đầu ra (dự đoán): 
+      [ '/home/phanquan/Document/Test Album/Asymmetry',
+        '/home/phanquan/Document/Test Album/Asymmetry/scans',
+        '/home/phanquan/Document/Test Album/Asymmetry/scans/scans' ]
+	// Cấu trúc file đầu ra (dự đoán):
+      [ '/home/phanquan/Document/Test Album/Asymmetry/Asymmetry (1).png',
+        '/home/phanquan/Document/Test Album/Asymmetry/Asymmetry.cuetools.flac.cue',
+        '/home/phanquan/Document/Test Album/Asymmetry/scans/scans/01_01.jpg',
+        '/home/phanquan/Document/Test Album/Asymmetry/scans/scans/01_08.jpg' ]
+	
+	// Flacs
+      [ '/home/phanquan/Document/Test Album/Asymmetry/01.メランコリック.flac',
+        '/home/phanquan/Document/Test Album/Asymmetry/02.心拍数#0822.flac',
+        '/home/phanquan/Document/Test Album/Asymmetry/06.Mr.Music.flac' ]
+	```
+- Tương tự với tất cả các file và flac,ta sẽ có 3 mảng output và tổng cộng 6 mảng cho toàn chương trình.
+
+- Với cấu trúc đầu ra như vậy, ta sẽ lấy từ phần `path.basename` của inputFolder trở đi và sau đó nối với `path.dirname` của outputFolder.
+
+- Đối với việc `copy` các file không phải flac sang out[utFolder,vì đường dẫn của chúng chứa một số thư mục mới chưa kịp cập nhật nên sẽ báo lỗi,ở đây, ta sẽ dùng mkdir để tạo thư mục ở outputFolder. Dùng mảng inputFolder, với mỗi phần tử, ta lấy kiểm tra xem thư mục tồn tại không bằng hàm `fs.existSync(path)`, nếu không thì `cd` tới `path.dirname` và `mkdir` `path.basename`, làm vậy cho hết cả mảng folder. Sau đó ta mới `cp` các files từ mảng input sang thư mục output.
+
+- Cuối cùng với mảng inputFlac, ta sẽ tạo mảng outputMp3 với cấu trúc giống hệt và `replace('.flac','.mp3')` từng phần tử rồi chạy ffmpeg để convert khi đã có địa chỉ flac và địa chỉ + tên mp3.
+
+### Tổng hợp các bước:
+
+1. Khởi tạo 6 mảng gồm 3 mảng chứa đường dẫn của inputFolder, 3 mảng chứa đường dẫn của outPutFolder.
+2. Dùng đệ quy chạy hàm kiểm tra inputFolder, kiểm tra nếu là directory thì đẩy vào mảng folder và chạy lại, nếu là file thì kiểm tra tiếp nếu là flac đẩy vào mảng flac, còn lại đẩy vào mảng file.
+3. Tạo 3 mảng outputFile, outputFolder, outputFlac với cấu trúc y hệt input nhưng thay đoạn dirname của input thành output.
+4. Thực hiện `mkdir` folder thông qua mảng outputFolder , `cp -rf` từ inputFile sang outputFile.
+5. Thực hiện `ffmpeg` để convert các file flac sang mp3. Đầu ra chính là địa chỉ + tên của mp3.
+6. Code caporal để hoàn thiện chương trình.
