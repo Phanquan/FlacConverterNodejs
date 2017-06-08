@@ -1,10 +1,8 @@
 # FlacConverterNodeJS
 Convert Flac files to mp3
 
-
-
 ##  GIỚI THIỆU
-----------------------------------------------------------------
+-----------------
 
 - Bài sẽ hướng dẫn Sử dụng NodeJS để code chương trình chuyển đổi file nhạc lossless .flac sang file .mp3 theo từng bước cơ bản.
 - Chuyển định dạng file flac trong thư mục đầu vào và in ra thư mục đầu ra theo đúng cấu trúc và chỉ chuyển file flac sang mp3,
@@ -16,8 +14,8 @@ còn các file khác giữ nguyên.
     - read-chunk và file-type để đọc định dạng file (.flac) để tránh các file 'trap' như text nhưng đuôi flac.
 - Kết quả có được sau khi convert:
 
-![Input](./images/intro_input.png)
-![Ouput](./images/intro_ouput.png)
+  ![Input](./images/intro_input.png)
+  ![Ouput](./images/intro_ouput.png)
 
 - p/s: dùng window chạy cái này là không nên....
 
@@ -26,31 +24,32 @@ còn các file khác giữ nguyên.
 - Bạn phải cài đặt ffmpeg trên máy để có thể convert được.
 
 - Install node_modules:
-```
-npm install 
-``` 
+  ```
+  npm install 
+  ``` 
 - Chạy file index.js để convert folder chứa file flac:
-```
-node index.js Folder "your-bitrate" "your-input-folder" "your-output-folder"
+  ```
+  node index.js Folder "your-bitrate" "your-input-folder" "your-output-folder"
 
---or--
+  --or--
 
-node index.js Folder "128k "Desktop/Test Flac Folder" "Desktop/Orther Folder"
-```
+  node index.js Folder "128k" "Desktop/Test Flac Folder" "Desktop/Orther Folder"
+  ```
 - Hoặc convert 1 file:
-```
-node index.js File "your-bitrate" "flac-file-path" "mp3-file-path"
+  ```
+  node index.js File "your-bitrate" "flac-file-path" "mp3-file-path"
 
---or--
+  --or--
 
-node index.js File "128k "Desktop/Flac/Asymmetry/03.PONPONPON.flac" "Desktop/03.PONPONPON.mp3"
-```
+  node index.js File "320k" "Desktop/Flac/Asymmetry/03.PONPONPON.flac" "Desktop/03.PONPONPON.mp3"
+  ```
 
 - Chú ý: 
 	- Bitrate là tham số quyết định chất lượng của file mp3,vd như 128k, 160k, 320k, ...
 	- Nên cho input và output và dấu ngoặc kép " " để tránh dấu space trên terminal.
+
 ## THƯ VIỆN
--------------
+----------
 #### ffmpeg: 
 
 - Cài đặt:   [FFMPEG](https://ffmpeg.org/)
@@ -61,52 +60,52 @@ ta cũng có thể dùng FFmpeg để cắt một đoạn video, crop video, ch�
 
 - Sau khi cài đặt ffmpeg và gõ ffmpeg -version thì ta sẽ thấy thông tin của nó trên terminal: 
 
-```
-$ ffmpeg -version
-ffmpeg version N-86330-gbd1179e Copyright (c) 2000-2017 the FFmpeg developers
-built with gcc 7.1.0 (GCC)
-configuration: --enable-gpl --enable-version3 --enable-cuda --enable-cuvid --enable-d3d11va --enable-dxva2 --enable-libmfx --enable-nvenc 
---enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray 
---enable-libbs2b --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug 
---enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenh264 --enable-libopenjpeg --enable-libopus 
---enable-librtmp --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab 
---enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 
---enable-libxavs --enable-libxvid --enable-libzimg --enable-lzma --enable-zlib
+  ```
+  $ ffmpeg -version
+  ffmpeg version N-86330-gbd1179e Copyright (c) 2000-2017 the FFmpeg developers
+  built with gcc 7.1.0 (GCC)
+  configuration: --enable-gpl --enable-version3 --enable-cuda --enable-cuvid --enable-d3d11va --enable-dxva2 --enable-libmfx --enable-nvenc 
+  --enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray 
+  --enable-libbs2b --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug 
+  --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenh264 --enable-libopenjpeg --enable-libopus 
+  --enable-librtmp --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab 
+  --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 
+  --enable-libxavs --enable-libxvid --enable-libzimg --enable-lzma --enable-zlib
 
-libavutil      55. 63.100 / 55. 63.100
-libavcodec     57. 96.101 / 57. 96.101
-libavformat    57. 72.101 / 57. 72.101
-libavdevice    57.  7.100 / 57.  7.100
-libavfilter     6. 90.100 /  6. 90.100
-libswscale      4.  7.101 /  4.  7.101
-libswresample   2.  8.100 /  2.  8.100
-libpostproc    54.  6.100 / 54.  6.100
-```
+  libavutil      55. 63.100 / 55. 63.100
+  libavcodec     57. 96.101 / 57. 96.101
+  libavformat    57. 72.101 / 57. 72.101
+  libavdevice    57.  7.100 / 57.  7.100
+  libavfilter     6. 90.100 /  6. 90.100
+  libswscale      4.  7.101 /  4.  7.101
+  libswresample   2.  8.100 /  2.  8.100
+  libpostproc    54.  6.100 / 54.  6.100
+  ```
 - Cú pháp để convert file flac sang mp3 trong đó giữ nguyên megadata làm giảm dung lượng file nhưng vẫn giữ được chất lượng âm thanh,
 trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` có thể đổi thành ``160k``, ```128k```,...
-```
-ffmpeg -y -i <input.flac> -ab 320k -map_metadata 0 -id3v2_version 3 <output.mp3>
-```
+  ```
+  ffmpeg -y -i <input.flac> -ab 320k -map_metadata 0 -id3v2_version 3 <output.mp3>
+  ```
 - Trong bài ta sẽ dùng vòng lặp để lặp lại cú pháp trên và convert từng file một.
 
 #### Read-chunk và File-type:
 
 - Cài đặt: 
-```
-npm install file-type --save
-```
+  ```
+  npm install file-type --save
+  ```
 
 - File-type và Read-chunk là một module của NodeJS được viết bởi [sindresorhus](https://github.com/sindresorhus/file-type). Trong khi Read-chunk sẽ đọc và trả về một chuỗi các Magic Number (vốn quyết định định dạng - format của file) còn File-type sẽ dịch chuỗi đó và trả về một đối tượng chứa thông tin của file đó.
 
 - Ví dụ:
-```javascript
-const readChunk = require('read-chunk');
-const fileType = require('file-type');
-const buffer = readChunk.sync('./test/Asymmetry/03.PONPONPON.flac', 0, 4100);
- 
-console.log(fileType(buffer));
-//=> { ext: 'flac', mime: 'audio/x-flac' }
-```
+  ```javascript
+  const readChunk = require('read-chunk');
+  const fileType = require('file-type');
+  const buffer = readChunk.sync('./test/Asymmetry/03.PONPONPON.flac', 0, 4100);
+  
+  console.log(fileType(buffer));
+  //=> { ext: 'flac', mime: 'audio/x-flac' }
+  ```
 - Tại sao ta không dùng `path.ext(targetFile) === '.flac'` của module có sẵn `path` mà lại phải install cái module này làm gì ?, đơn giản vì path.ext sẽ trả về **bất cứ** file nào có đuôi .flac còn file-type sẽ giúp ta **lọc** được file .flac thật sự nhằm tránh các file ~~trap~~ như text.flac etc...
 
 #### Child-process:
@@ -115,23 +114,23 @@ console.log(fileType(buffer));
 
 - child-process.spawn() và child-process.exec() đều là một phương thức của child process để khởi tạo một quá trình con chạy trong terminal. Điểm khác nhau duy nhất của cả hai là spawn() sẽ tạo ra một quá trình con một cách không đồng bộ, không chặn các vòng lặp sự kiện (event loops) của NodeJS, còn exec() sẽ tạo ra một shell và dùng shell đó để chạy terminal. 
 
-```javascript
-const spawn = require('child_process').exec;
-const ls = exec('ls -lh /usr');
+  ```javascript
+  const spawn = require('child_process').exec;
+  const ls = exec('ls -lh /usr');
 
-ls.stdout.on('data', (data) => {
-  console.log(`stdout: ${data}`);
-});
+  ls.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
 
-ls.stderr.on('data', (data) => {
-  console.log(`stderr: ${data}`);
-});
+  ls.stderr.on('data', (data) => {
+    console.log(`stderr: ${data}`);
+  });
 
-ls.on('close', (code) => {
-  console.log(`child process exited with code ${code}`);
-});
+  ls.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
 
-```
+  ```
 
 - Đoạn code trên tương đương với dòng terminal sau và kết quả trả về của nó:  
     >`$ ls -lh /usr`  
@@ -145,50 +144,60 @@ ls.on('close', (code) => {
 
 - Để có thể chạy ffmpeg thông qua terminal lúc đang chạy NodeJS, ta sẽ dùng child-process để chạy đoạn code chuyển đổi như đã nói trên.
 
-```javascript
-    const ffmpeg = exec.('ffmpeg -y -i ${input.flac} -ab 320k -map_metadata 0 -id3v2_version 3 ${output.mp3}')
-```
+  ```javascript
+      const ffmpeg = exec.('ffmpeg -y -i ${input.flac} -ab 320k -map_metadata 0 -id3v2_version 3 ${output.mp3}')
+  ```
 
 - Vì Command line của Window khác so với UNIX nên bạn phải chỉnh lại cho phù hợp với hệ điều hành của bạn (vd như copy của Win và cp của UNIX).
 
 #### Caporal:
 
 - Cài đặt: 
-```
-npm install caporal --save
-```
+  
+  ```
+  npm install caporal --save
+  ```
 - Caporal là một framework để xây dựng một ứng dụng chạy trên terminal (cpi - command line applications) bằng NodeJS, giúp khởi tạo, tô màu input, dễ dàng sử dụng,... Trong bài này caporal sẽ giúp ta truyền tham số trên terminal để chạy chương trình một cách linh hoạt.
 
 - Ví dụ và -h,--help
-```javascript
-const prog = require('caporal');
-prog
-  .version('1.0.0') // phiên bản hiện tại của chương trình
-  //lệnh để chạy chương trình.
-  .command('deploy', 'Our deploy command')
-  // 'app' và 'env' là tham số bắt buộc, cả hai là thuộc tính của arguments
-  // và other-env là tham số không bắt buộc, tất cả các tham số này là 1 thuộc tính.
-  .argument('<app>', 'App to deploy')
-  .argument('<env>', 'Environment')
-  .argument('[other-env...]', 'Other environments') 
-  //action() để chạy chương trình
-  .action(function(args, options) {
-    console.log(args);
-    // {
-    //   "app": "myapp", 
-    //   "env": "production",
-    //   "otherEnv": ["google", "azure"]
-    // }
-  });
+  ```javascript
+  const prog = require('caporal');
+  prog
+    .version('1.0.0') // phiên bản hiện tại của chương trình
+    //lệnh để chạy chương trình.
+    .command('deploy', 'Our deploy command')
+    // 'app' và 'env' là tham số bắt buộc, cả hai là thuộc tính của arguments
+    // và other-env là tham số không bắt buộc, tất cả các tham số này là 1 thuộc tính.
+    .argument('<app>', 'App to deploy')
+    .argument('<env>', 'Environment')
+    .argument('[other-env...]', 'Other environments') 
+    //action() để chạy chương trình
+    .action(function(args, options) {
+      console.log(args);
+      // {
+      //   "app": "myapp", 
+      //   "env": "production",
+      //   "otherEnv": ["google", "azure"]
+      // }
+    });
 
-prog.parse(process.argv);
+  prog.parse(process.argv);
 
-//node ./myprog.js deploy myapp production aws google azure
-```
+  //node ./myprog.js deploy myapp production aws google azure
+  ```
 ![help](./images/caporal_help.png)
 
-## HƯỚNG DẪN CODE
------------------
-### Phần I: Logic và Class
+## PHẦN I: LOGIC
 
+--------
 
+### Phân tích bài toán: 
+
+- Chương trình cho phép nhập đầu vào một thư mục chứa file flac và các file khác, đầu ra sẽ là một thư mục mới giống hệt thư mục cũ nhưng chỉ thay file flac bằng file mp3 và giữ nguyên cấu trúc thư mục và file khác. Ta sẽ có những điều sau :
+
+- Sử dụng File System và Path để phân tích cấu trúc input folder và đẩy ra các mảng chứa thông tin của thư mục (directories), các file và các file flac.
+- Đối với output folder, ta sẽ thấy có cùng cấu trúc với input folder (đương nhiên) tức là với đường dẫn từ tên thư mục trở đi sẽ giống nhau, chỉ khác ở chỗ đó trở về:
+  ```javascript
+	let testSourceFolder = '/home/phanquan/Desktop/FlacConverterNodejs/Flac Test Files';
+	let testTargetFolder = '/home/phanquan/Document'
+	```
