@@ -284,18 +284,15 @@ class FolderInformation{
 - Sau khi khởi tạo các thuộc tính xong, ta sẽ bắt đầu tạo các phương thức để lấy data, method lấy data của các folder,files và flacs:
 
 ```javascript
-class FolderInformation{
-	//Phương thức khởi tạo
-	constructor(){
-		//....
-	}
+
 	//Phương thức logic
 	getInputFolderAndFiles(srcPath) {
 		// tạo mảng chứa các file và folder con của inputFolder,dùng fs.readdir
 		let fileList = fs.readdirSync(srcPath),
-		desPath = ''
-		fileList.forEach((file) => {
-		desPath = srcPath + '/' + file //tạo desPath là đường dẫn của file và folder con
+			desPath = ''
+		fileList.forEach((file) => {// lặp từng file trong fileList
+			//tạo desPath là đường dẫn của file và folder con
+			desPath = srcPath + '/' + file 
 			//nếu desPath là folder 
 			if (fs.statSync(desPath).isDirectory()) {
 				//thì đẩy vào mảng folder input
@@ -316,7 +313,50 @@ class FolderInformation{
 			}
 		})
 	}
-}
 ```
-abc
+
+- Method để lấy file,folder,flac output dựa trên output đưa vào:
+```
+inputFolder: 	'E:/home/phanquan/Desktop/Album'
+outputFolder:	'C:/Document/Test'  
+
+Folder bất kỳ trong input:
+a = 'E:/home/phanquan/Desktop/Album/Asymmetry/scans'
+b = 'E:/home/phanquan/Desktop/Album/Asymmetry/scans/scans'
+
+Đường dẫn output ta muốn:
+x = 'C:/Document/Test/Album/Asymmetry/scans'
+y = 'C:/Document/Test/Album/Asymmetry/scans/scans'
+```
+- Để có được output, ta sẽ cắt chuỗi từ đoạn `Album` ở inputFolder tức là `path.basename` của nó trở về: 
+```javascript
+path.basename(inputFolder) // -> 'Album'
+indexOf(path.basename(inputFolder)) // -> trả về 25 là vị trí của basename - 'Album'
+inputFolder.substring(indexOf(path.basename(inputFolder))) // -> 'Album'
+a = a.substring(indexOf(path.basename(inputFolder))) // -> 'Album/Asymmetry/scans'
+b = b.substring(indexOf(path.basename(inputFolder))) // -> 'Album/Asymmetry/scans/scans'
+outputFolder + a // -> 'C:/Document/Test/Album/Asymmetry/scans' //đã giống x
+outputFolder + b // -> 'C:/Document/Test/Album/Asymmetry/scans/scans' //đã giống y
+```
+
+```javascript
+	//phương thức lấy output file,folder và flac
+	// tham số là inputFolder và outputFolder
+	getOutputFolderAndFiles(sourceFolder, targetFolder) { 
+		this.folderData.arrOfInputFolder.forEach((data) => { // lặp từng data trong mảng
+			this.folderData.arrOfOutputFolder.push(targetFolder + '/' + data.substring(data.indexOf(path.basename(sourceFolder))))
+		}) // Đẩy từng data là outputFolder vào mảng data folder
+		this.fileData.arrOfInputFiles.forEach((data) => {// lặp từng data trong mảng
+			this.fileData.arrOfOutputFiles.push(targetFolder + '/' + data.substring(data.indexOf(path.basename(sourceFolder))))
+		})// Đẩy từng data là outputFiles vào mảng data files
+		this.fileData.arrOfInputFlacs.forEach((data) => {// lặp từng data trong mảng
+			this.fileData.arrOfOutputFlacs.push(targetFolder + '/' + data.substring(data.indexOf(path.basename(sourceFolder))))
+		})// Đẩy từng data là outputFlacs vào mảng data Flacs
+	}
+
+```
+- Vậy là ta đã dựng xong class Info, giờ ta sẽ tới class Converter
+
+### Bước 2: Class Converter
+
 
