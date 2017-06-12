@@ -23,6 +23,16 @@ còn các file khác giữ nguyên.
 -------------
 - Bạn phải cài đặt ffmpeg trên máy để có thể convert được.
 
+  ```
+  //MacOS:
+  brew install ffmpeg
+
+  //Unix:
+  sudo apt-get install ffmpeg
+
+  //Window: tốt nhất là ko nên thử.
+  ```
+
 - Install node_modules:
   ```
   npm install 
@@ -37,11 +47,11 @@ còn các file khác giữ nguyên.
   ```
 - Hoặc convert 1 file:
   ```
-  node index.js File "your-bitrate" "flac-file-path" "mp3-file-path"
+  node index.js File "your-bitrate" "flac-file-path" "ouputFolder"
 
   --or--
 
-  node index.js File "320k" "Desktop/Flac/Asymmetry/03.PONPONPON.flac" "Desktop/03.PONPONPON.mp3"
+  node index.js File "320k" "Desktop/Asymmetry/03.PONPONPON.flac" "Desktop"
   ```
 
 - Chú ý: 
@@ -52,7 +62,8 @@ còn các file khác giữ nguyên.
 ----------
 #### ffmpeg: 
 
-- Cài đặt:   [FFMPEG](https://ffmpeg.org/)
+- Website:   [FFMPEG](https://ffmpeg.org/)
+
 
 - FFmpeg là một thư viện có rất nhiều tiện ích cho việc xử lý video và audio. Tính năng nổi bật nhất có lẽ là khả năng 
 encode/decode nhiều video,audio có format khác nhau, giúp convert qua lại nhiều định dạng video,audio. Ngoài ra, chúng 
@@ -84,7 +95,7 @@ ta cũng có thể dùng FFmpeg để cắt một đoạn video, crop video, ch�
 - Cú pháp để convert file flac sang mp3 trong đó giữ nguyên megadata làm giảm dung lượng file nhưng vẫn giữ được chất lượng âm thanh,
 trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` có thể đổi thành ``160k``, ```128k```,...
   ```
-  ffmpeg -y -i <input.flac> -ab 320k -map_metadata 0 -id3v2_version 3 <output.mp3>
+  ffmpeg -y -i "<input.flac>" -ab 320k -map_metadata 0 -id3v2_version 3 "<output.mp3>"
   ```
 - Trong bài ta sẽ dùng vòng lặp để lặp lại cú pháp trên và convert từng file một.
 
@@ -101,7 +112,7 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
   ```javascript
   const readChunk = require('read-chunk');
   const fileType = require('file-type');
-  const buffer = readChunk.sync('./test/Asymmetry/03.PONPONPON.flac', 0, 4100);
+  const buffer = readChunk.sync('./03.PONPONPON.flac', 0, 4100);
   
   console.log(fileType(buffer));
   //=> { ext: 'flac', mime: 'audio/x-flac' }
@@ -145,10 +156,27 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
 - Để có thể chạy ffmpeg thông qua terminal lúc đang chạy NodeJS, ta sẽ dùng child-process để chạy đoạn code chuyển đổi như đã nói trên.
 
   ```javascript
-      const ffmpeg = exec.('ffmpeg -y -i ${input.flac} -ab 320k -map_metadata 0 -id3v2_version 3 ${output.mp3}')
+  const ffmpeg = exec.('ffmpeg -y -i ${input.flac} -ab 320k -map_metadata 0 -id3v2_version 3 ${output.mp3}')
   ```
 
 - Vì Command line của Window khác so với UNIX nên bạn phải chỉnh lại cho phù hợp với hệ điều hành của bạn (vd như copy của Win và cp của UNIX).
+
+#### node-ffprobe và progress-bar:
+
+- Đây là các thư viện phụ trợ giúp chương trình nhìn 'đẹp' hơn,node-ffprobe sẽ giúp ta lấy thông tin của một file audio đầu vào và progress-bar sẽ dựa theo thông tin đó để tạo nên một thanh tiến trình chạy từ 0-100% ứng với quá trình xử lý file.
+
+- Ví dụ: 
+
+  ![Progree-bar](./images/progress-bar.png)
+
+- Cài đặt:
+  ```
+  // node-ffprobe
+  npm install node-ffprobe
+
+  // progress-bar
+  npm install progress-bar
+  ```
 
 #### Caporal:
 
@@ -218,23 +246,24 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
 - Đối với output folder, ta sẽ thấy có cùng cấu trúc với input folder (đương nhiên) tức là với đường dẫn từ tên thư mục trở đi sẽ giống nhau, chỉ khác ở chỗ đó trở về:
 
 	```javascript
-	let testSourceFolder = '/home/phanquan/Desktop/Test Album';
-	let testTargetFolder = '/home/phanquan/Document'
+	let testSourceFolder = 'C:/Desktop/A
+  lbum';
+	let testTargetFolder = 'E:/Document'
 
 	// Cấu trúc thư mục đầu ra (dự đoán): 
-      [ '/home/phanquan/Document/Test Album/Asymmetry',
-        '/home/phanquan/Document/Test Album/Asymmetry/scans',
-        '/home/phanquan/Document/Test Album/Asymmetry/scans/scans' ]
+      [ 'E:/Document/Album/Asymmetry',
+        'E:/Document/Album/Asymmetry/scans',
+        'E:/Document/Album/Asymmetry/scans/scans' ]
 	// Cấu trúc file đầu ra (dự đoán):
-      [ '/home/phanquan/Document/Test Album/Asymmetry/Asymmetry (1).png',
-        '/home/phanquan/Document/Test Album/Asymmetry/Asymmetry.cuetools.flac.cue',
-        '/home/phanquan/Document/Test Album/Asymmetry/scans/scans/01_01.jpg',
-        '/home/phanquan/Document/Test Album/Asymmetry/scans/scans/01_08.jpg' ]
+      [ 'E:/Document/Album/Asymmetry/Asymmetry (1).png',
+        'E:/Document/Album/Asymmetry/Asymmetry.cuetools.flac.cue',
+        'E:/Document/Album/Asymmetry/scans/scans/01_01.jpg',
+        'E:/Document/Album/Asymmetry/scans/scans/01_08.jpg' ]
 	
 	// Flacs
-      [ '/home/phanquan/Document/Test Album/Asymmetry/01.メランコリック.flac',
-        '/home/phanquan/Document/Test Album/Asymmetry/02.心拍数#0822.flac',
-        '/home/phanquan/Document/Test Album/Asymmetry/06.Mr.Music.flac' ]
+      [ 'E:/Document/Album/Asymmetry/01.メランコリック.flac',
+        'E:/Document/Album/Asymmetry/02.心拍数#0822.flac',
+        '/home/phanquan/Document/Album/Asymmetry/06.Mr.Music.flac' ]
 	```
 - Tương tự với tất cả các file và flac,ta sẽ có 3 mảng output và tổng cộng 6 mảng cho toàn chương trình.
 
@@ -278,6 +307,7 @@ class FolderInformation{
             arrOfOutputFlacs: []	//Mảng chứa path của các flac output
         }
     }
+    // method
 }
 ```
 
@@ -285,7 +315,7 @@ class FolderInformation{
 
 ```javascript
 
-	//Phương thức logic
+	//method
 	getInputFolderAndFiles(srcPath) {
 		// tạo mảng chứa các file và folder con của inputFolder,dùng fs.readdir
 		let fileList = fs.readdirSync(srcPath),
@@ -355,9 +385,30 @@ outputFolder + b // -> 'C:/Document/Test/Album/Asymmetry/scans/scans' //đã gi�
 	}
 
 ```
-- Vậy là ta đã dựng xong class Info, giờ ta sẽ tới class Converter
+- Vậy là ta đã dựng xong class FolderInformation, giờ ta sẽ tới class Converter
 
 ### Bước 2: Class Converter
-abc
 
+- Ta sẽ chia class Converter thực hiện các bước sau:
+  - Dựa vào mảng arrOfOutputFolders tạo nên cấu trúc folder ở output.
+  - Dựa vào mảng arrOfOutputFiles copy các file từ input sang output.
+  - Dựa vào mảng arrofOutputFlacs convert các flac từ input thành mp3 ở output.
+
+```javascript
+class Converter{
+  //method
+}
+```
+- Method createOutputFolder:
+```javascript
+	createOutputFolder(arrayOfOutputFolder, sourcePath, targetPath) {
+		let outputFolder = path.basename(sourcePath),
+			mkdir = exec(`cd "${targetPath}" && mkdir "${outputFolder}"`)
+		arrayOfOutputFolder.forEach((file) => {
+			if (!fs.existsSync(file)) {
+				let mkdirChild = exec(`cd "${path.dirname(file)}" && mkdir "${path.basename(file)}"`)
+			}
+		})
+	}
+```
 

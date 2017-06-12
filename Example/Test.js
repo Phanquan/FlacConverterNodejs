@@ -57,11 +57,6 @@ class FolderInformation {
 
 class Converter {
 
-
-	getFLacStat() {
-
-	}
-
 	createOutputFolder(arrayOfOutputFolder, sourcePath, targetPath) {
 		let outputFolder = path.basename(sourcePath),
 			mkdir = exec(`cd "${targetPath}" && mkdir "${outputFolder}"`)
@@ -94,17 +89,17 @@ class Converter {
 					flacBitrate = probeData.format.bit_rate / 1000
 					flacSize = probeData.format.size / 1024
 				});
-
+				//console  flacBitrate
 				setTimeout(function () {
-					let mp3Size = flacSize * bitRate.replace(/[^0-9]/g,'') / flacBitrate
+					let mp3Size = flacSize * bitRate.replace(/[^0-9]/g,'') / flacBitrate // = flacSize * 128k / 1120k
 
 					let bar = ProgressBar.create(process.stdout),
 						mp3SizeWhenConverting = 0
 					bar.format = '$bar;$percentage,3:0;% converted.';// Dye the bar green :) and pad percentage to a length of 3 with zeroes.
 					bar.symbols.loaded = '\u2605';	// Black star
 					bar.symbols.notLoaded = '\u2606';	// White star
-					const advance = () => {
-						if (mp3SizeWhenConverting > mp3Size) {
+					const advance = (newMp3Size) => {
+						if (mp3SizeWhenConverting > mp3Size - 1000) {
 							return bar.update(1); // return 100% if size > source
 						}
 						if (!mp3Size) {
@@ -113,7 +108,8 @@ class Converter {
 
 							bar.update(mp3SizeWhenConverting / mp3Size);
 
-							mp3SizeWhenConverting += 2.3 * bitRate.replace(/[^0-9]/g,'') //++
+							// mp3SizeWhenConverting += 2.5 * bitRate.replace(/[^0-9]/g,'') //++ 128k or 320k
+							mp3SizeWhenConverting = newMp3Size
 						}
 					}
 					console.log(`Converting "${path.basename(file)}": `)
@@ -124,9 +120,9 @@ class Converter {
 					})
 
 					ffmpeg.stderr.on('data', (data) => {
-						advance()
-						// console.log(flacBitrate)
-						// console.log(flacSize)
+						let newMp3Size = data.substring(data.indexOf('size='),data.indexOf('time=')).replace(/[^0-9]/g,"")
+						advance(newMp3Size)
+						// console.log(newMp3Size)
 					})
 
 					ffmpeg.on('close', (code) => {
@@ -134,7 +130,7 @@ class Converter {
 						callback()
 					})
 
-				}, 250);
+				}, 500);
 			}, (err) => {
 				if (err) {
 					console.log('Errors Happened')
@@ -167,7 +163,7 @@ class Converter {
 
 			let bar = ProgressBar.create(process.stdout),
 				mp3SizeWhenConverting = 0
-			bar.format = '$bar;$percentage,3:0;% converted.';// Dye the bar green :) and pad percentage to a length of 3 with zeroes.
+			bar.format = '$bar;$percentage, 3:0;% converted.';// Dye the bar green :) and pad percentage to a length of 3 with zeroes.
 			bar.symbols.loaded = '\u2605';	// Black star
 			bar.symbols.notLoaded = '\u2606';	// White star
 			const advance = () => {
@@ -177,10 +173,8 @@ class Converter {
 				if (!mp3Size) {
 					return bar.update(0); //return 0% if size = nan
 				} else {
-
 					bar.update(mp3SizeWhenConverting / mp3Size);
-
-					mp3SizeWhenConverting += 2.5 * 128 //++
+					mp3SizeWhenConverting += 2.3 * 128 //++
 				}
 			}
 
@@ -197,7 +191,7 @@ class Converter {
 			ffmpeg.on('close', (code) => {
 				console.log(' Done\n')
 			})
-		}, 250);
+		}, 500);
 
 	}
 
@@ -217,13 +211,13 @@ let testTargetFiles = '/home/superquan/Desktop/outputFolder'
 let info = new FolderInformation()
 info.getInputFolderAndFiles(testSourceFolder)
 info.getOutputFolderAndFiles(testSourceFolder, testTargetFolder)
-// console.log(info)
+console.log(info)
 
 
-let converter = new Converter()
-converter.createOutputFolder(info.folderData.arrOfOutputFolder, testSourceFolder, testTargetFolder)
-converter.createOutputFiles(info.fileData.arrOfInputFiles, info.fileData.arrOfOutputFiles)
-converter.convert('320k', info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
+// let converter = new Converter()
+// converter.createOutputFolder(info.folderData.arrOfOutputFolder, testSourceFolder, testTargetFolder)
+// converter.createOutputFiles(info.fileData.arrOfInputFiles, info.fileData.arrOfOutputFiles)
+// converter.convert('320k', info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
 // converter.convertFile('128k', testSourceFiles, testTargetFiles)
 
 
