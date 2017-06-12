@@ -96,7 +96,7 @@ class Converter {
 				});
 
 				setTimeout(function () {
-					let mp3Size = flacSize * bitRate.replace(/[^0-9]/g,'') / flacBitrate
+					let mp3Size = flacSize * 320 / flacBitrate
 
 					let bar = ProgressBar.create(process.stdout),
 						mp3SizeWhenConverting = 0
@@ -113,7 +113,7 @@ class Converter {
 
 							bar.update(mp3SizeWhenConverting / mp3Size);
 
-							mp3SizeWhenConverting += 2.3 * bitRate.replace(/[^0-9]/g,'') //++
+							mp3SizeWhenConverting += 2.3 * 320 //++
 						}
 					}
 					console.log(`Converting "${path.basename(file)}": `)
@@ -124,7 +124,8 @@ class Converter {
 					})
 
 					ffmpeg.stderr.on('data', (data) => {
-						advance()
+						// advance()
+                        console.log(data)
 						// console.log(flacBitrate)
 						// console.log(flacSize)
 					})
@@ -134,7 +135,7 @@ class Converter {
 						callback()
 					})
 
-				}, 250);
+				}, 500);
 			}, (err) => {
 				if (err) {
 					console.log('Errors Happened')
@@ -193,6 +194,7 @@ class Converter {
 
 			ffmpeg.stderr.on("data", data => {
 				advance()
+                // console.log(data)
 			})
 			ffmpeg.on('close', (code) => {
 				console.log(' Done\n')
@@ -221,9 +223,9 @@ info.getOutputFolderAndFiles(testSourceFolder, testTargetFolder)
 
 
 let converter = new Converter()
-converter.createOutputFolder(info.folderData.arrOfOutputFolder, testSourceFolder, testTargetFolder)
-converter.createOutputFiles(info.fileData.arrOfInputFiles, info.fileData.arrOfOutputFiles)
-converter.convert('320k', info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
-// converter.convertFile('128k', testSourceFiles, testTargetFiles)
+// converter.createOutputFolder(info.folderData.arrOfOutputFolder, testSourceFolder, testTargetFolder)
+// converter.createOutputFiles(info.fileData.arrOfInputFiles, info.fileData.arrOfOutputFiles)
+// converter.convert('320k', info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
+converter.convertFile('128k', testSourceFiles, testTargetFiles)
 
 

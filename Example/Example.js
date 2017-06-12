@@ -78,40 +78,64 @@ class Converter {
         if (arrayOfInputFlacs.length === arrayOfOutputFlacs.length) {
             for (var i = 0; i < arrayOfInputFlacs.length; i++) {
                 path.basename(arrayOfOutputFlacs[i]).replace('.flac', '.mp3')
-                let ffmpeg = exec(`ffmpeg -y -i "${arrayOfInputFlacs[i]}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${arrayOfOutputFlacs[i].replace('.flac', '.mp3')}"`)
+                let ffmpeg = exec(`ffmpeg -y -i "${arrayOfInputFlacs[i]}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${arrayOfOutputFlacs[i].replace('.flac', '.mp3')}" `)
+                    // x = 'abc'
 
                 ffmpeg.stdout.on('data', (data) => {
                     console.log(data)
                 })
 
                 ffmpeg.stderr.on('data', (data) => {
-                    console.log(data)
+                    process.stdout.write('*')
                 })
 
                 ffmpeg.on('close', (code) => {
-                    console.log(`Closing code: ${code}`)
+                    console.log(` Done`)
+                    // console.log(x)
                 })
             }
         } else {
             throw 'something wrong'
         }
     }
+    convertFile(bitRate, inputFile, outputFile) {
+        let targetFile = outputFile + '/' + path.basename(inputFile).replace('.flac', '.mp3'),
+            ffmpeg = exec(`time ffmpeg -y -i "${inputFile}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${targetFile}"`),
+            x = ''
+        ffmpeg.stdout.on("data", data => {
+            console.log(data)
+        })
+
+        ffmpeg.stderr.on("data", data => {
+            process.stdout.write('*')
+
+        })
+        ffmpeg.on('close', (code) => {
+            console.log(' Done \n')
+        })
+    }
+
 }
 
 
 
-let testSourceFolder = '/home/phanquan/Desktop/FlacConverterNodejs/Flac Test Files';
-let testTargetFolder = '/home/phanquan/Desktop';
 
-let info = new FolderInformation()
-info.getInputFolderAndFiles(testSourceFolder)
-info.getOutputFolderAndFiles(testSourceFolder, testTargetFolder)
-console.log(info)
+let testSourceFolder = '/home/superquan/Desktop/FlacConverterNodejs/Flac Test Files';
+let testTargetFolder = '/home/superquan/Desktop';
+let testSourceFiles = '/home/superquan/Desktop/FlacConverterNodejs/Flac Test Files/Asymmetry/06.Mr.Music.flac'
+let testTargetFiles = '/home/superquan/Desktop/outputFolder'
 
 
-// let converter = new Converter()
+// let info = new FolderInformation()
+// info.getInputFolderAndFiles(testSourceFolder)
+// info.getOutputFolderAndFiles(testSourceFolder, testTargetFolder)
+// console.log(info)
+
+
+let converter = new Converter()
 // converter.createOutputFolder(info.folderData.arrOfOutputFolder, testSourceFolder, testTargetFolder)
 // converter.createOutputFiles(info.fileData.arrOfInputFiles,info.fileData.arrOfOutputFiles)
 // converter.convert('128k',info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
+converter.convertFile('128k', testSourceFiles, testTargetFiles)
 
 
