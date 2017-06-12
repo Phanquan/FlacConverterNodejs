@@ -358,5 +358,6 @@ outputFolder + b // -> 'C:/Document/Test/Album/Asymmetry/scans/scans' //đã gi�
 - Vậy là ta đã dựng xong class Info, giờ ta sẽ tới class Converter
 
 ### Bước 2: Class Converter
+abc
 
 
