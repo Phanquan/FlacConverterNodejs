@@ -245,8 +245,7 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
 - Đối với output folder, ta sẽ thấy có cùng cấu trúc với input folder (đương nhiên) tức là với đường dẫn từ tên thư mục trở đi sẽ giống nhau, chỉ khác ở chỗ đó trở về:
 
 	```javascript
-	let testSourceFolder = 'C:/Desktop/A
-  lbum';
+	let testSourceFolder = 'C:/Desktop/Album';
 	let testTargetFolder = 'E:/Document'
 
 	// Cấu trúc thư mục đầu ra (dự đoán): 
