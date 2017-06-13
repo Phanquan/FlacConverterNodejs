@@ -58,6 +58,9 @@ còn các file khác giữ nguyên.
 
   node index.js File "320k" "Desktop/Asymmetry/03.PONPONPON.flac" "Desktop"
   ```
+- Ví dụ:
+
+![result](./images/caporal-result.png)
 
 - Chú ý: 
 	- Bitrate là tham số quyết định chất lượng của file mp3,vd như 128k, 160k, 320k, ...

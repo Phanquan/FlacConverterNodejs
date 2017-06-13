@@ -25,7 +25,7 @@ program
 		let converter = new Converter()
 		converter.createOutputFolder(info.folderData.arrOfOutputFolder, testSourceFolder, testTargetFolder)
 		converter.createOutputFiles(info.fileData.arrOfInputFiles, info.fileData.arrOfOutputFiles)
-		converter.convertDirectory(bitrate, info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
+		converter.convertFolder(bitrate, info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
 	})
 	.command('File', 'Convert a single Flac file')
 	.argument('<bitRate', 'bitrate of output file')
