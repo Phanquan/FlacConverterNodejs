@@ -32,6 +32,11 @@ còn các file khác giữ nguyên.
 
   //Window: tốt nhất là ko nên thử.
   ```
+- Clone bài này về máy:
+
+    ```
+    git clone https://github.com/Phanquan/FlacConverterNodejs.git
+    ```
 
 - Install node_modules:
   ```
@@ -205,7 +210,6 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
 
   //node ./myprog.js deploy myapp production aws google azure
   ```
-![help](./images/caporal_help.png)
 
 ## PHẦN I: LOGIC
 
@@ -274,8 +278,12 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
 5. Thực hiện `ffmpeg` để convert các file flac sang mp3. Đầu ra chính là địa chỉ + tên của mp3.
 6. Code caporal để hoàn thiện chương trình.
 
-## PHẦN II: CLASS
+## PHẦN II: XÂY DỰNG CHƯƠNG TRÌNH
 ----------------------------------------------
+#### Source code:
+- Chương trình chạy không có progress-bar: ./Example/Example-Non-Progress.js
+- Chương trình chạy có progress-bar: ./Example/Example-With-Progress.js
+- Chương trình chạy caporal: index.js,COnverter.js và FolderInformation.js
 
 ### Bước 1: Xây dựng Class FolderInformation
 
@@ -520,23 +528,116 @@ convertFolder(bitRate, arrayOfInputFlacs, arrayOfOutputFlacs) { //eg: 128k
 ```
 
 #### Method convertFile():
-- Tương tự giống convert folder
+- Tương tự giống convert folder:
 ```javascript
-	convertFile(bitRate, inputFile, outputFile) {
-		console.log(`Converting ${path.basename(inputFile)}`)
-			//khởi tạo child-process để convert file flac sang mp3
-			let ffmpeg = exec(`time ffmpeg -y -i "${inputFile}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${targetFile}"`)
+convertFile(bitRate, inputFile, outputFile) {
+    console.log(`Converting ${path.basename(inputFile)}`)
+        //khởi tạo child-process để convert file flac sang mp3
+        let ffmpeg = exec(`time ffmpeg -y -i "${inputFile}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${targetFile}"`)
 
-			ffmpeg.stdout.on("data", data => {
-				console.log(data)
-			})
-			ffmpeg.stderr.on("data", data => {
-                console.log(data)
-			})
-			ffmpeg.on('close', (code) => {
-				console.log(' Done\n')// close process-child
-			})
-		});
-	}
+        ffmpeg.stdout.on("data", data => {
+            console.log(data)
+        })
+        ffmpeg.stderr.on("data", data => {
+            console.log(data)
+        })
+        ffmpeg.on('close', (code) => {
+            console.log(' Done\n')// close process-child
+        })
+    });
+}
 
 ```
+- Ta sẽ thêm progress-bar để tạo thanh diễn biến khi chạy convertFile:
+```javascript
+convertFile(bitRate, inputFile, outputFile) {
+    console.log(`Converting ${path.basename(inputFile)}`)
+    // tạo file đường dẫn của file .mop3 đầu ra:
+    let targetFile = outputFile + '/' + path.basename(inputFile).replace('.flac', '.mp3'),
+        flacSize = 1, //khởi tạo biến kích thước của flac
+        flacBitrate = 1//khởi tạo biến bitrate của flac
+
+    probe(inputFile, function (err, probeData) {
+        //gán thông tin của flac.
+        flacBitrate = probeData.format.bit_rate / 1000
+        flacSize = probeData.format.size / 1024
+        //khởi tạo biến có giá trị là kích thước file mp3 đầu ra
+        let totalMp3Size = flacSize * bitRate.replace(/[^0-9]/g,'') / flacBitrate
+        //Khởi tạo progress-bar
+        let bar = ProgressBar.create(process.stdout),
+            mp3SizeWhenConverting = 0
+        // Định hình cấu trúc của bar
+        bar.format = '$bar;$percentage, 3:0;% converted.';
+        bar.symbols.loaded = '\u2605';	// Black star
+        bar.symbols.notLoaded = '\u2606';	// White star
+        //hàm thực hiện bar chạy %
+        const advance = (curentMp3Size) => {
+            //Kiểm tra nếu size đang convert mà lớn hơn size tổng thì cho bar lên 100%
+            if (mp3SizeWhenConverting > totalMp3Size - 3 * bitRate.replace(/[^0-9]/g, '')) {
+                return bar.update(1); // return 100% if size > source
+            } else if (!totalMp3Size) { //nếu size tổng = null,undefied,Nan thì cho về 0%
+                return bar.update(0); //return 0% if size = NaN
+            } else {
+                //lấy % hiện tại
+                bar.update(mp3SizeWhenConverting / totalMp3Size);
+                //update bar
+                mp3SizeWhenConverting = curentMp3Size
+            }
+        }
+
+        //khởi tạo child-process để convert file flac sang mp3
+        let ffmpeg = exec(`time ffmpeg -y -i "${inputFile}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${targetFile}"`)
+
+        ffmpeg.stdout.on("data", data => {
+            console.log(data)
+        })
+        ffmpeg.stderr.on("data", data => {
+            //lấy size mp3 hiện tại theo data cả process
+            let curentMp3Size = data.substring(data.indexOf('size='), data.indexOf('time=')).replace(/[^0-9]/g, "")
+            advance(curentMp3Size) // update vào progress-bar
+        })
+        ffmpeg.on('close', (code) => {
+            console.log(' Done\n')// close process-child
+        })
+    });
+}
+```
+### Bước 3: class main chạy chương trình:
+```javascript
+// inputFolder và outputFolder
+let testSourceFolder = '/home/superquan/Desktop/FlacConverterNodejs/Flac Test Files';
+let testTargetFolder = '/home/superquan/Desktop';
+
+//inputFile và outputFile
+let testSourceFiles = '/home/superquan/Desktop/FlacConverterNodejs/Flac Test Files/Asymmetry/03.PONPONPON.flac'
+let testTargetFiles = '/home/superquan/Desktop/outputFolder'
+
+// khởi tạo instance info của class FolderInformation và lấy thông tin
+let info = new FolderInformation()
+info.getInputFolderAndFiles(testSourceFolder)
+info.getOutputFolderAndFiles(testSourceFolder, testTargetFolder)
+// console.log(info)
+
+//khởi tạo instance converter của class Converter và thực hiện convert
+let converter = new Converter()
+
+//tạo folder ở ouput và copy file sang đó
+converter.createOutputFolder(info.folderData.arrOfOutputFolder, testSourceFolder, testTargetFolder)
+converter.createOutputFiles(info.fileData.arrOfInputFiles, info.fileData.arrOfOutputFiles)
+
+// Chọn 1 trong 2:
+// Convert cả folder
+converter.convertFolder('128k', info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
+
+// Chỉ convert file
+// converter.convertFile('320k', testSourceFiles, testTargetFiles)
+```
+### Kết quả:
+- Without Progress-bar:
+
+![Without](./images/noProgress.png)
+
+- With Progress-bar:
+
+![With](./images/withProgress.png)
+
