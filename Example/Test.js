@@ -89,6 +89,8 @@ class Converter {
 					callback()
 				})
 			}
+		}, (err) => {
+			if (err) console.log(err)
 		})
 	}
 
@@ -105,15 +107,15 @@ class Converter {
 
 	}
 
-	convert(bitRate, arrayOfInputFlacs, arrayOfOutputFlacs) { //eg: 128k
+	convertFolder(bitRate, arrayOfInputFlacs, arrayOfOutputFlacs) { //eg: 128k
 		if (arrayOfInputFlacs.length === arrayOfOutputFlacs.length) {
 			// dùng async mapseries để lặp tuần tự
-			async.mapSeries(arrayOfInputFlacs, (file, callback) => {
+			async.mapSeries(arrayOfInputFlacs, (inputFlac, callback) => {
 				//khởi tạo các thông tin cần thiết của file flac
 				let flacSize = 1; //size của flac
 				let flacBitrate = 1; // bitrate của flac
 				// dùng node-ffprobe để lấy thông tin của file flac
-				probe(file, function (err, probeData) {
+				probe(inputFlac, function (err, probeData) {
 					// gán biến khởi tạo ở trên với giá trị lấy được
 					flacBitrate = probeData.format.bit_rate / 1000 // trả về bitrate k
 					flacSize = probeData.format.size / 1024 // trả về dạng kb
@@ -142,11 +144,11 @@ class Converter {
 						}
 					}
 
-					console.log(`Converting "${path.basename(file)}": `)
+					console.log(`Converting "${path.basename(inputFlac)}": `)
 
-					let i = arrayOfInputFlacs.indexOf(file) // lấy index của file flac , để lấy ra cùng phần tử i trong mảng output
+					let i = arrayOfInputFlacs.indexOf(inputFlac) // lấy index của file flac , để lấy ra cùng phần tử i trong mảng output
 					// tạo child-process để convert flac
-					let ffmpeg = exec(`ffmpeg -y -i "${file}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${arrayOfOutputFlacs[i].replace('.flac', '.mp3')}" `)
+					let ffmpeg = exec(`ffmpeg -y -i "${inputFlac}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${arrayOfOutputFlacs[i].replace('.flac', '.mp3')}" `)
 
 					ffmpeg.stdout.on('data', (data) => {
 						console.log(data)
@@ -165,7 +167,7 @@ class Converter {
 				});
 			}, (err) => {
 				if (err) {
-					console.log('Errors Happened: ',err)
+					console.log('Errors Happened: ', err)
 				} else {
 					console.log('Completed!')
 				}
@@ -243,7 +245,7 @@ info.getOutputFolderAndFiles(testSourceFolder, testTargetFolder)
 let converter = new Converter()
 converter.createOutputFolder(info.folderData.arrOfOutputFolder, testSourceFolder, testTargetFolder)
 converter.createOutputFiles(info.fileData.arrOfInputFiles, info.fileData.arrOfOutputFiles)
-converter.convert('128k', info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
+converter.convertFolder('128k', info.fileData.arrOfInputFlacs, info.fileData.arrOfOutputFlacs)
 // converter.convertFile('128k', testSourceFiles, testTargetFiles)
 
 

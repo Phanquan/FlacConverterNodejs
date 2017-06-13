@@ -74,14 +74,6 @@ ta cũng có thể dùng FFmpeg để cắt một đoạn video, crop video, ch�
   ```
   $ ffmpeg -version
   ffmpeg version N-86330-gbd1179e Copyright (c) 2000-2017 the FFmpeg developers
-  built with gcc 7.1.0 (GCC)
-  configuration: --enable-gpl --enable-version3 --enable-cuda --enable-cuvid --enable-d3d11va --enable-dxva2 --enable-libmfx --enable-nvenc 
-  --enable-avisynth --enable-bzlib --enable-fontconfig --enable-frei0r --enable-gnutls --enable-iconv --enable-libass --enable-libbluray 
-  --enable-libbs2b --enable-libcaca --enable-libfreetype --enable-libgme --enable-libgsm --enable-libilbc --enable-libmodplug 
-  --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenh264 --enable-libopenjpeg --enable-libopus 
-  --enable-librtmp --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab 
-  --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpx --enable-libwavpack --enable-libwebp --enable-libx264 --enable-libx265 
-  --enable-libxavs --enable-libxvid --enable-libzimg --enable-lzma --enable-zlib
 
   libavutil      55. 63.100 / 55. 63.100
   libavcodec     57. 96.101 / 57. 96.101
@@ -291,15 +283,15 @@ trong đó ```-y``` để overwrite các file trùng tên có sẵn, ```320k``` 
 
 ```javascript
 class FolderInformation{
-	//Phương thức khởi tạo
+//Phương thức khởi tạo
     constructor() {
-		// Khai báo folderData là đối tượng có 2 thuộc tính.
+    // Khai báo folderData là đối tượng có 2 thuộc tính.
         this.folderData = {
             arrOfInputFolder: [],	//Mảng chứa path của các folder input
             arrOfOutputFolder: []	//Mảng chứa path của các folder output
         }
 
-		//khai báo fileData là đối tượng có 4 thuộc tính.
+    //khai báo fileData là đối tượng có 4 thuộc tính.
         this.fileData = {
             arrOfInputFiles: [],	//Mảng chứa path của các file input
             arrOfInputFlacs: [],	//Mảng chứa path của các flac input
@@ -307,42 +299,41 @@ class FolderInformation{
             arrOfOutputFlacs: []	//Mảng chứa path của các flac output
         }
     }
-    // method
+  // method
 }
 ```
 
 - Sau khi khởi tạo các thuộc tính xong, ta sẽ bắt đầu tạo các phương thức để lấy data, method lấy data của các folder,files và flacs:
 
 ```javascript
-
-	//method
-	getInputFolderAndFiles(srcPath) {
-		// tạo mảng chứa các file và folder con của inputFolder,dùng fs.readdir
-		let fileList = fs.readdirSync(srcPath),
-			desPath = ''
-		fileList.forEach((file) => {// lặp từng file trong fileList
-			//tạo desPath là đường dẫn của file và folder con
-			desPath = srcPath + '/' + file 
-			//nếu desPath là folder 
-			if (fs.statSync(desPath).isDirectory()) {
-				//thì đẩy vào mảng folder input
-				this.folderData.arrOfInputFolder.push(desPath)
-				//và thực hiện đệ quy để lấy tất cả folder
-				this.getInputFolderAndFiles(desPath)
-			} else { //nếu không phải folder (tức là file)
-				//tạo biến đọc Magic Number
-				let buffer = readChunk.sync(desPath, 0, 4100)
-				//Nếu biến hỗ trợ dạng Magic Number và là Flac
-				if (fileType(buffer) && fileType(buffer).ext === 'flac') {
-					//thì đẩy vào mảng file input
-					this.fileData.arrOfInputFlacs.push(desPath);
-				} else {
-					//các file còn lại đẩy vào mảng file input
-					this.fileData.arrOfInputFiles.push(desPath);
-				}
-			}
-		})
-	}
+//method
+getInputFolderAndFiles(srcPath) {
+    // tạo mảng chứa các file và folder con của inputFolder,dùng fs.readdir
+    let fileList = fs.readdirSync(srcPath),
+        desPath = ''
+    fileList.forEach((file) => {// lặp từng file trong fileList
+        //tạo desPath là đường dẫn của file và folder con
+        desPath = srcPath + '/' + file 
+        //nếu desPath là folder 
+        if (fs.statSync(desPath).isDirectory()) {
+            //thì đẩy vào mảng folder input
+            this.folderData.arrOfInputFolder.push(desPath)
+            //và thực hiện đệ quy để lấy tất cả folder
+            this.getInputFolderAndFiles(desPath)
+        } else { //nếu không phải folder (tức là file)
+            //tạo biến đọc Magic Number
+            let buffer = readChunk.sync(desPath, 0, 4100)
+            //Nếu biến hỗ trợ dạng Magic Number và là Flac
+            if (fileType(buffer) && fileType(buffer).ext === 'flac') {
+                //thì đẩy vào mảng file input
+                this.fileData.arrOfInputFlacs.push(desPath);
+            } else {
+                //các file còn lại đẩy vào mảng file input
+                this.fileData.arrOfInputFiles.push(desPath);
+            }
+        }
+    })
+}
 ```
 
 - Method để lấy file,folder,flac output dựa trên output đưa vào:
@@ -370,19 +361,22 @@ outputFolder + b // -> 'C:/Document/Test/Album/Asymmetry/scans/scans' //đã gi�
 ```
 
 ```javascript
-	//phương thức lấy output file,folder và flac
-	// tham số là inputFolder và outputFolder
-	getOutputFolderAndFiles(sourceFolder, targetFolder) { 
-		this.folderData.arrOfInputFolder.forEach((data) => { // lặp từng data trong mảng
-			this.folderData.arrOfOutputFolder.push(targetFolder + '/' + data.substring(data.indexOf(path.basename(sourceFolder))))
-		}) // Đẩy từng data là outputFolder vào mảng data folder
-		this.fileData.arrOfInputFiles.forEach((data) => {// lặp từng data trong mảng
-			this.fileData.arrOfOutputFiles.push(targetFolder + '/' + data.substring(data.indexOf(path.basename(sourceFolder))))
-		})// Đẩy từng data là outputFiles vào mảng data files
-		this.fileData.arrOfInputFlacs.forEach((data) => {// lặp từng data trong mảng
-			this.fileData.arrOfOutputFlacs.push(targetFolder + '/' + data.substring(data.indexOf(path.basename(sourceFolder))))
-		})// Đẩy từng data là outputFlacs vào mảng data Flacs
-	}
+//phương thức lấy output file,folder và flac
+// tham số là inputFolder và outputFolder
+getOutputFolderAndFiles(sourceFolder, targetFolder) { 
+    // lặp từng data trong mảng
+    this.folderData.arrOfInputFolder.forEach((data) => { 
+        this.folderData.arrOfOutputFolder.push(targetFolder + '/' + data.substring(data.indexOf(path.basename(sourceFolder))))
+    }) // Đẩy từng data là outputFolder vào mảng data folder
+    // lặp từng data trong mảng
+    this.fileData.arrOfInputFiles.forEach((data) => {
+        this.fileData.arrOfOutputFiles.push(targetFolder + '/' + data.substring(data.indexOf(path.basename(sourceFolder))))
+    })// Đẩy từng data là outputFiles vào mảng data files
+    // lặp từng data trong mảng
+    this.fileData.arrOfInputFlacs.forEach((data) => {
+        this.fileData.arrOfOutputFlacs.push(targetFolder + '/' + data.substring(data.indexOf(path.basename(sourceFolder))))
+    })// Đẩy từng data là outputFlacs vào mảng data Flacs
+}
 
 ```
 - Vậy là ta đã dựng xong class FolderInformation, giờ ta sẽ tới class Converter
@@ -393,14 +387,14 @@ outputFolder + b // -> 'C:/Document/Test/Album/Asymmetry/scans/scans' //đã gi�
   - Dựa vào mảng arrOfOutputFolders tạo nên cấu trúc folder ở output.
   - Dựa vào mảng arrOfOutputFiles copy các file từ input sang output.
   - Dựa vào mảng arrofOutputFlacs convert các flac từ input thành mp3 ở output.
-
+  - Một method riêng để convert 1 file flac
 ```javascript
 class Converter{
-  //method
+    //method
 }
 ```
-- Method createOutputFolder:
-  - Giả sử ta có input,output và cấu trúc folder của input là:
+#### Method createOutputFolder(): 
+- Giả sử ta có input,output và cấu trúc folder của input là:
 ```javascript
 inputFolder = 'C:/Desktop/Album'  //input
 outputFolder = 'E:/Music'   //output
@@ -413,24 +407,136 @@ let output = path.basename(inputfolder)// -> output = 'Album'
 // dùng terminal để tới thự mục đầu ra và tạo folder tổng
 'cd "E:/Music" && mkdir "Album"' // -> trả về E:/Music/Album
 
+// dùng terminal để tạo các thư mục con trong thư mục đầu ra:
+// cd tới dirname của phần tử trong mảng trên rồi mkdir base name của nó
+'cd "C:/Desktop/Album" && mkdir "scans"'// -> trả về  'E:/Music/Album/scans'
+'cd "C:/Desktop/Album/scans" && mkdir "images"'// -> trả về 'E:/Music/Album/scans/images'
+
+//cuối cùng ta được outputFolder:
+[ 'E:/Music/Album/scans',
+  'E:/Music/Album/scans/images']
 ```
+- Method:
 ```javascript
-	createOutputFolder(arrayOfOutputFolder, sourcePath, targetPath) {
-		let outputFolder = path.basename(sourcePath), // lấy base name của thư mục đầu vào
-			// tạo thư mục tổng ở đầu ra chứa tất cả các file và folder.
-			mkdir = exec(`cd "${targetPath}" && mkdir "${outputFolder}"`)
-		// sử dụng vòng lặp mapSeries để tạo các folder con ở đầu ra một các tuần tự
-		async.mapSeries(arrayOfOutputFolder, (file, callback) => {
-			if (!fs.existsSync(file)) {// kiểm tra xem ở đường dẫn có thư mục đó chưa ?
-				// tạo child-process để cd tới đường dẫn trước đó (dirname) và tạo thư mục con theo basename
-				let mkdirChild = exec(`cd "${path.dirname(file)}" && mkdir "${path.basename(file)}"`)
-				// khi child-process kết thúc
-				mkdirChild.on('close', (code) => {
-					// sau khi thực hiện xong một child-process thì callback để thực hiện tiếp child-process tiếp theo
-					callback()
-				})
-			}
-		})
-	}
+createOutputFolder(arrayOfOutputFolder, sourcePath, targetPath) {
+    let outputFolder = path.basename(sourcePath), // lấy base name của thư mục đầu vào
+        // tạo thư mục tổng ở đầu ra chứa tất cả các file và folder.
+        mkdir = exec(`cd "${targetPath}" && mkdir "${outputFolder}"`)
+    // sử dụng vòng lặp mapSeries để tạo các folder con ở đầu ra một các tuần tự
+    async.mapSeries(arrayOfOutputFolder, (file, callback) => {
+        if (!fs.existsSync(file)) {// kiểm tra xem ở đường dẫn có thư mục đó chưa ?
+            // tạo child-process để cd tới đường dẫn trước đó (dirname) và tạo thư mục con theo basename
+            let mkdirChild = exec(`cd "${path.dirname(file)}" && mkdir "${path.basename(file)}"`)
+            // khi child-process kết thúc
+            mkdirChild.on('close', (code) => {
+                // sau khi thực hiện xong một child-process thì callback để thực hiện tiếp child-process tiếp theo
+                callback()
+            })
+        }
+    }, (err) => {
+        if(err) console.log(err)
+    })
+}
+```
+#### Method createOutputFiles()
+- Method copy các file ngoài flac:
+  - Do ta đã tạo được cấu trúc của outputFolder giống với của inputFolder nên việc copy file rất dễ dàng,không bị xung đột va cũng không cần phải lặp tuần tự.
+  - Method:
+```javascript
+// method copy tất cả file (ko flac) ở thư mục đầu vào chuyển sang thưc mục đầu ra.
+createOutputFiles(arrayOfInputFiles, arrayOfOutputFiles) {
+    if (arrayOfInputFiles.length === arrayOfOutputFiles.length) {
+        for (let i = 0; i < arrayOfInputFiles.length; i++) {
+            // thực hiện copy đè lên các file có sẵn ở đó nếu trùng tên.
+            let cpChild = exec(`cp -rf "${arrayOfInputFiles[i]}" "${arrayOfOutputFiles[i]}"`)
+        }
+    } else {
+        throw 'somethings seriously wrong '
+    }
+
+}
+```
+#### Method convertFolder():
+- Sử dụng `ffmpeg` để convert flac sang mp3:
+```
+ffmpeg -y -i "<input.flac>" -ab 320k -map_metadata 0 -id3v2_version 3 "<output.mp3>"
+```
+- Dùng child-process:
+```javascript
+const exec = require('child-process').exec
+let ffmpeg = exec('ffmpeg -y -i "<input.flac>" -ab 320k -map_metadata 0 -id3v2_version 3 "<output.mp3>"')
+
+ffmpeg.stdout.on('data', (data) => {
+    console.log(data)
+})
+
+ffmpeg.stderr.on('data', (data) => {
+    console.log(data)
+})
+
+ffmpeg.on('close', (code) => {
+    // khi hoàn thành thì log ra done
+    console.log(`Closing code: ${code}`) 
+})
 ```
 
+- Method
+    - Dựa vào mảng arrOfInputFlac và arrOfOutputFlac, ta sẽ convert từng phần tử của mảng, đầu ra ta sẽ replace '.flac' thành '.mp3'
+    - Sử dụng async.mapSeries để lặp tuần tự các child-process.
+```javascript
+convertFolder(bitRate, arrayOfInputFlacs, arrayOfOutputFlacs) { //eg: 128k
+    if (arrayOfInputFlacs.length === arrayOfOutputFlacs.length) {
+        // dùng async mapseries để lặp tuần tự
+        async.mapSeries(arrayOfInputFlacs, (inputFlac, callback) => {
+            console.log(`Converting "${path.basename(inputFlac)}": `)
+            // lấy index của file flac , để lấy ra cùng phần tử i trong mảng output
+            let i = arrayOfInputFlacs.indexOf(inputFlac) 
+            // tạo child-process để convert flac
+            let ffmpeg = exec(`ffmpeg -y -i "${inputFlac}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${arrayOfOutputFlacs[i].replace('.flac', '.mp3')}" `)
+
+            ffmpeg.stdout.on('data', (data) => {
+                console.log(data)
+            })
+
+            ffmpeg.stderr.on('data', (data) => {
+                console.log(data)
+            })
+
+            ffmpeg.on('close', (code) => {
+                console.log(`Closing code: ${code}`) // khi hoàn thành thì log ra done
+                callback()// callback để thực hiện child-process tiếp theo
+            })
+        }, (err) => {
+            if (err) {
+                console.log('Errors Happened: ',err)
+            } else {
+                console.log('Completed!')
+            }
+        })
+    } else {
+    throw 'something wrong'
+    }
+}
+```
+
+#### Method convertFile():
+- Tương tự giống convert folder
+```javascript
+	convertFile(bitRate, inputFile, outputFile) {
+		console.log(`Converting ${path.basename(inputFile)}`)
+			//khởi tạo child-process để convert file flac sang mp3
+			let ffmpeg = exec(`time ffmpeg -y -i "${inputFile}" -ab ${bitRate} -map_metadata 0 -id3v2_version 3 "${targetFile}"`)
+
+			ffmpeg.stdout.on("data", data => {
+				console.log(data)
+			})
+			ffmpeg.stderr.on("data", data => {
+                console.log(data)
+			})
+			ffmpeg.on('close', (code) => {
+				console.log(' Done\n')// close process-child
+			})
+		});
+	}
+
+```
