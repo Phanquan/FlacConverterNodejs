@@ -400,13 +400,35 @@ class Converter{
 }
 ```
 - Method createOutputFolder:
+  - Giả sử ta có input,output và cấu trúc folder của input là:
+```javascript
+inputFolder = 'C:/Desktop/Album'  //input
+outputFolder = 'E:/Music'   //output
+
+//cấu trúc folder của inputFolder sẽ là dạng:
+[ 'C:/Desktop/Album/scans',
+  'C:/Desktop/Album/scans/images']
+// ta sẽ tính toán và tạo thư mục scans và images sao cho có cấu trúc của input:
+let output = path.basename(inputfolder)// -> output = 'Album'
+// dùng terminal để tới thự mục đầu ra và tạo folder tổng
+'cd "E:/Music" && mkdir "Album"' // -> trả về E:/Music/Album
+
+```
 ```javascript
 	createOutputFolder(arrayOfOutputFolder, sourcePath, targetPath) {
-		let outputFolder = path.basename(sourcePath),
+		let outputFolder = path.basename(sourcePath), // lấy base name của thư mục đầu vào
+			// tạo thư mục tổng ở đầu ra chứa tất cả các file và folder.
 			mkdir = exec(`cd "${targetPath}" && mkdir "${outputFolder}"`)
-		arrayOfOutputFolder.forEach((file) => {
-			if (!fs.existsSync(file)) {
+		// sử dụng vòng lặp mapSeries để tạo các folder con ở đầu ra một các tuần tự
+		async.mapSeries(arrayOfOutputFolder, (file, callback) => {
+			if (!fs.existsSync(file)) {// kiểm tra xem ở đường dẫn có thư mục đó chưa ?
+				// tạo child-process để cd tới đường dẫn trước đó (dirname) và tạo thư mục con theo basename
 				let mkdirChild = exec(`cd "${path.dirname(file)}" && mkdir "${path.basename(file)}"`)
+				// khi child-process kết thúc
+				mkdirChild.on('close', (code) => {
+					// sau khi thực hiện xong một child-process thì callback để thực hiện tiếp child-process tiếp theo
+					callback()
+				})
 			}
 		})
 	}
